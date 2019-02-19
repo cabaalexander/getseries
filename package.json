@@ -1,0 +1,12 @@
+{
+  "name": "getseries",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "cabaalexander <cabaalexander321@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "chalk": "^2.4.2",
+    "cli": "^1.0.1",
+    "node-fetch": "^2.3.0"
+  }
+}
