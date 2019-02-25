@@ -11,9 +11,12 @@ const {GET_SERIES_ENDPOINT} = process.env;
 
 cli.spinner(downloadColor('Fetching...'));
 
+const handleError = ({message}) => console.log(message);
+
 fetch(GET_SERIES_ENDPOINT)
     .then((res) => res.json())
     .then((json) => console.log(json))
-    .then((_) => {
+    .catch(handleError)
+    .finally((_) => {
       cli.spinner(finishColor('Fetching... done!'), true);
     });
