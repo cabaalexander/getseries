@@ -3,6 +3,7 @@
 const fetch = require('node-fetch');
 const cli = require('cli');
 const chalk = require('chalk');
+const utils = require('./utils');
 
 const downloadColor = chalk.blueBright;
 const finishColor = chalk.green;
@@ -13,15 +14,13 @@ const {
   GET_SERIES_SEASONS_ENDPOINT,
 } = process.env;
 const [,, ...args] = process.argv;
-const SERIE_NAME = args.join(' ');
-const SERIE_SEASON = 3;
-const SERIE_EPISODE = 0;
+const PARSED_ARGS = utils.parseArgs(args);
 
-
-if (!SERIE_NAME) {
-  log('Provide a name pls...');
+if (!PARSED_ARGS) {
   process.exit(1);
 }
+
+const [SERIE_NAME, SERIE_SEASON, SERIE_EPISODE] = PARSED_ARGS;
 
 
 const toJson = (res) => res.json();
@@ -53,8 +52,7 @@ const filterEpisodes = (episodes) => {
     return episodes;
   }
   return episodes
-      .filter(({episode}) => episode == SERIE_EPISODE)
-      .map(({content}) => content);
+      .filter(({episode}) => episode == SERIE_EPISODE);
 };
 
 
