@@ -26,7 +26,7 @@ const [SERIE_NAME, SERIE_SEASON, SERIE_EPISODE] = PARSED_ARGS;
 const toJson = (res) => res.json();
 
 
-const handleError = ({message}) => log(`[error]\n${message}`);
+const handleError = ({message}) => log(`\n[error]${message}`);
 
 
 const seriesByTitle = (title) => ({title: serieTitle}) =>
@@ -43,16 +43,34 @@ const fetchAllSeasonsEpisodes = ({_id}) =>
       .then(({episodes}) => episodes);
 
 
-const filterSeasons = (allSeasonEpisodes) =>
-  allSeasonEpisodes.filter(({season}) => season == SERIE_SEASON);
+const filterSeasons = (allSeasonEpisodes) => {
+  const lastSeason = allSeasonEpisodes.pop().season;
+  const seasonEpisodes = allSeasonEpisodes
+      .filter(({season}) => season == ( SERIE_SEASON || lastSeason ));
+
+  if (!seasonEpisodes.length) {
+    throw new Error(`
+    ${utils.capitalize(SERIE_NAME)} does not have a season ${SERIE_SEASON}`);
+  }
+  return seasonEpisodes;
+};
 
 
 const filterEpisodes = (episodes) => {
   if (!SERIE_EPISODE) {
-    return episodes;
+    return [episodes.pop()];
   }
-  return episodes
-      .filter(({episode}) => episode == SERIE_EPISODE);
+
+  const filtered = episodes.filter(({episode}) => episode == SERIE_EPISODE);
+
+  if (!filtered.length) {
+    throw new Error(`
+    The season ${SERIE_SEASON} of ${utils.capitalize(SERIE_NAME)}
+    \t\t does not have the episode ${SERIE_EPISODE}`
+    );
+  }
+
+  return filtered;
 };
 
 
@@ -60,9 +78,11 @@ const filterContent = (episodes) =>
   episodes.map(({
     title,
     episode,
+    season,
     content: [{link}],
   }) => ({
     title,
+    season,
     episode,
     link,
   }));

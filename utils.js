@@ -17,7 +17,7 @@ Examples:
 };
 
 exports.parseArgs = (args) => {
-  const re = /((?:\w+\s?)+)[sS](\d+)\s*(?:[eE](\d+))?/;
+  const re = /^(\w+)+\s*(?:[sS](\d+))?\s*(?:[eE](\d+))?$/;
   const match = args.join(' ').match(re);
   if (!match) {
     showHelp();
@@ -26,3 +26,8 @@ exports.parseArgs = (args) => {
   const [, serieName, serieSeason, serieEpisode = 0] = match;
   return [serieName.trim(), Number(serieSeason), serieEpisode];
 };
+
+exports.capitalize = (text) =>
+  text
+      .split(' ')
+      .map((s) => s[0].toUpperCase() + s.slice(1,) );

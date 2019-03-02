@@ -1,8 +1,13 @@
 {
-  "name": "getseries",
-  "version": "1.0.0",
+  "name": "@cabaalexander/getseries",
+  "version": "0.0.0",
   "main": "index.js",
+  "scripts": {
+    "postversion": "git push --tags && yarn publish . --tag $npm_package_version && git push && echo \"Successfully released version $npm_package_version!\""
+  },
+  "bin": "./index.js",
   "author": "cabaalexander <cabaalexander321@gmail.com>",
+  "repository": "https://github.com/cabaalexander/getseries.git",
   "license": "MIT",
   "dependencies": {
     "chalk": "^2.4.2",
