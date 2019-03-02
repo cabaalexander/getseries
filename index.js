@@ -56,6 +56,18 @@ const filterEpisodes = (episodes) => {
 };
 
 
+const filterContent = (episodes) =>
+  episodes.map(({
+    title,
+    episode,
+    content: [{link}],
+  }) => ({
+    title,
+    episode,
+    link,
+  }));
+
+
 cli.spinner(downloadColor('Fetching...'));
 fetch(GET_SERIES_ENDPOINT)
     .then(toJson)
@@ -63,6 +75,7 @@ fetch(GET_SERIES_ENDPOINT)
     .then(fetchAllSeasonsEpisodes)
     .then(filterSeasons)
     .then(filterEpisodes)
+    .then(filterContent)
     .then(log)
     .catch(handleError)
     .finally(() => {
