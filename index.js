@@ -20,7 +20,7 @@ if (!PARSED_ARGS) {
   process.exit(1);
 }
 
-const [SERIE_NAME, SERIE_SEASON, SERIE_EPISODE] = PARSED_ARGS;
+const [SERIE_NAME, SERIE_SEASON, SERIE_EPISODES] = PARSED_ARGS;
 
 
 const toJson = (res) => res.json();
@@ -57,16 +57,16 @@ const filterSeasons = (allSeasonEpisodes) => {
 
 
 const filterEpisodes = (episodes) => {
-  if (!SERIE_EPISODE) {
+  if (!SERIE_EPISODES.length) {
     return [episodes.pop()];
   }
 
-  const filtered = episodes.filter(({episode}) => episode == SERIE_EPISODE);
+  const filtered = episodes.filter(({episode}) => SERIE_EPISODES.includes(episode));
 
   if (!filtered.length) {
     throw new Error(`
     The season ${SERIE_SEASON} of ${utils.capitalize(SERIE_NAME)}
-    \t\t does not have the episode ${SERIE_EPISODE}`
+    \t\t does not have the episode ${SERIE_EPISODES}`
     );
   }
 
@@ -88,6 +88,10 @@ const filterContent = (episodes) =>
   }));
 
 
+const logFinalResult = (data) => {
+  log(`\n${JSON.stringify(data, null, 2)}`);
+};
+
 cli.spinner(downloadColor('Fetching...'));
 fetch(GET_SERIES_ENDPOINT)
     .then(toJson)
@@ -96,7 +100,7 @@ fetch(GET_SERIES_ENDPOINT)
     .then(filterSeasons)
     .then(filterEpisodes)
     .then(filterContent)
-    .then(log)
+    .then(logFinalResult)
     .catch(handleError)
     .finally(() => {
       cli.spinner(finishColor('Fetching... done!'), true);

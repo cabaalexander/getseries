@@ -20,14 +20,24 @@ EXAMPLES
 };
 
 exports.parseArgs = (args) => {
-  const re = /^(\w+)+\s*(?:[sS](\d+))?\s*(?:[eE](\d+))?$/;
+  const re = new RegExp([
+    /^/,
+    /\s*(?<name>(?:\s*[a-zA-Z])+)\s*/,
+    /(?:\s*[sS](?<season>\d+)\s*)?/,
+    /(?<episodes>(?:[eE]\d+\s*)*)?/,
+    /$/,
+  ].map((r) => r.source).join(''));
+
   const match = args.join(' ').match(re);
+
   if (!match) {
     showHelp();
     return;
   }
-  const [, serieName, serieSeason, serieEpisode = 0] = match;
-  return [serieName.trim(), Number(serieSeason), serieEpisode];
+  const {name, season, episodes: unformattedEpisodes = ''} = match.groups;
+  const episodes = unformattedEpisodes.split('e').filter(Boolean).map(Number);
+
+  return [name.trim(), Number(season), episodes];
 };
 
 exports.capitalize = (text) =>
