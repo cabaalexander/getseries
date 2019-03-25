@@ -1,18 +1,21 @@
 const showHelp = () => {
   console.log(`
-Usage:
-    $ getseries <name> [PATTERN...]
+USAGE
+    $ getseries <NAME> [PATTERN]
 
-Pattern:
+PATTERN
     s<number>       Season
     e<number>       Episode
 
-Examples:
-    $ getserie some cool serie s01
-        This brings all episodes from season 1
+EXAMPLES
+    $ getserie arrow
+        Get the last episode from the last season
 
-    $ getserie some cool serie s01 e02
-        This gets episode two from season one
+    $ getserie arrow s1
+        Get the last episode from season 1
+
+    $ get serie arrow s1 e2
+        Get the second episode from season 1
 `);
 };
 
